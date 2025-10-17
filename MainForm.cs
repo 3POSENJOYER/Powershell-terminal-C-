@@ -9,26 +9,23 @@ namespace PowerShellTerminal
         private readonly PowerShellInterpreter _interpreter;
         private readonly TextBox _outputTextBox;
         private readonly TextBox _inputTextBox;
-        
+
         public MainForm()
         {
-            // Спочатку ініціалізуємо TextBox
             _outputTextBox = new TextBox();
             _inputTextBox = new TextBox();
             _interpreter = new PowerShellInterpreter();
-            
+
             InitializeComponent();
         }
-        
+
         private void InitializeComponent()
         {
-            // Налаштування форми
             Text = "PowerShell Terminal";
             Size = new Size(800, 600);
             StartPosition = FormStartPosition.CenterScreen;
             BackColor = Color.Black;
-            
-            // Налаштування TextBox для виводу
+
             _outputTextBox.Multiline = true;
             _outputTextBox.ScrollBars = ScrollBars.Vertical;
             _outputTextBox.Dock = DockStyle.Fill;
@@ -37,19 +34,15 @@ namespace PowerShellTerminal
             _outputTextBox.ForeColor = Color.Lime;
             _outputTextBox.Font = new Font("Consolas", 11);
             _outputTextBox.BorderStyle = BorderStyle.None;
-            
-            // Налаштування TextBox для вводу
+
             _inputTextBox.Dock = DockStyle.Bottom;
             _inputTextBox.BackColor = Color.Black;
             _inputTextBox.ForeColor = Color.White;
             _inputTextBox.Font = new Font("Consolas", 11);
             _inputTextBox.BorderStyle = BorderStyle.FixedSingle;
             _inputTextBox.Height = 30;
-            
-            // Додаємо підказку
             _inputTextBox.PlaceholderText = "Введіть PowerShell команду та натисніть Enter...";
-            
-            // Обробник події для вводу команд
+
             _inputTextBox.KeyDown += async (sender, e) =>
             {
                 if (e.KeyCode == Keys.Enter)
@@ -58,23 +51,79 @@ namespace PowerShellTerminal
                     if (!string.IsNullOrEmpty(command))
                     {
                         _inputTextBox.Clear();
-                        
-                        // Додаємо команду до виводу
                         _outputTextBox.AppendText($"PS> {command}\r\n");
-                        
-                        // Виконуємо команду
+
+								if (command.Equals("newTerminal", StringComparison.OrdinalIgnoreCase))
+									{
+										
+										MainForm newForm = new MainForm();
+										newForm.Show();
+
+										_outputTextBox.AppendText("[Info] Створено новий термінал\r\n\r\n");
+
+										e.Handled = true;
+										e.SuppressKeyPress = true;
+										return;
+									}
+
+                        if (command.StartsWith("changeColor ", StringComparison.OrdinalIgnoreCase))
+                        {
+                            string colorName = command.Substring("changeColor ".Length).Trim();
+                            try
+                            {
+                                var newColor = Color.FromName(colorName);
+                                if (newColor.IsKnownColor)
+                                {
+                                    _outputTextBox.BackColor = newColor;
+                                    _outputTextBox.AppendText($"[Info] Колір змінено на {colorName}\r\n\r\n");
+                                }
+                                else
+                                {
+                                    _outputTextBox.AppendText($"[Error] Невідомий колір: {colorName}\r\n\r\n");
+                                }
+                            }
+                            catch
+                            {
+                                _outputTextBox.AppendText($"[Error] Помилка при зміні кольору.\r\n\r\n");
+                            }
+
+                            e.Handled = true;
+                            e.SuppressKeyPress = true;
+                            return;
+                        }
+							if (command.StartsWith("Color", StringComparison.OrdinalIgnoreCase))
+							{
+								string colorName = command.Substring("Color ".Length).Trim();
+								try
+								{
+									var newColor = Color.FromName(colorName);
+									if (newColor.IsKnownColor)
+									{
+										_outputTextBox.ForeColor = newColor;
+										_outputTextBox.AppendText($"[Info] Колір тексту змінено на {colorName}\r\n\r\n");
+									}
+									else
+									{
+										_outputTextBox.AppendText($"[Error] Невідомий колір: {colorName}\r\n\r\n");
+									}
+								}
+								catch
+								{
+									_outputTextBox.AppendText($"[Error] Помилка при зміні кольору.\r\n\r\n");
+								}
+									 e.Handled = true;
+                            e.SuppressKeyPress = true;
+                            return;
+								}
+							
+
                         var result = await _interpreter.InterpretAsync(command);
-                        
-                        // Додаємо результат до виводу
+
                         if (result.Success && !string.IsNullOrEmpty(result.Output))
-                        {
                             _outputTextBox.AppendText($"{result.Output}\r\n");
-                        }
                         else if (!string.IsNullOrEmpty(result.Errors))
-                        {
                             _outputTextBox.AppendText($"ПОМИЛКА: {result.Errors}\r\n");
-                        }
-                        
+
                         _outputTextBox.AppendText("\r\n");
                         _outputTextBox.SelectionStart = _outputTextBox.Text.Length;
                         _outputTextBox.ScrollToCaret();
@@ -83,24 +132,14 @@ namespace PowerShellTerminal
                     e.SuppressKeyPress = true;
                 }
             };
-            
-            // Додаємо обробник для активації форми
-            this.Shown += (sender, e) =>
-            {
-                _inputTextBox.Focus();
-            };
-            
-            // Додаємо обробник кліку на вихідному TextBox
-            _outputTextBox.Click += (sender, e) =>
-            {
-                _inputTextBox.Focus();
-            };
-            
-            // Додаємо елементи на форму
+
+            this.Shown += (sender, e) => _inputTextBox.Focus();
+            _outputTextBox.Click += (sender, e) => _inputTextBox.Focus();
+
             Controls.Add(_outputTextBox);
             Controls.Add(_inputTextBox);
         }
-        
+
         protected override void OnShown(EventArgs e)
         {
             base.OnShown(e);
