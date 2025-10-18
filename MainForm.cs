@@ -8,7 +8,14 @@ namespace PowerShellTerminal
     {
         private readonly PowerShellInterpreter _interpreter;
         private readonly TextBox _outputTextBox;
-        private readonly TextBox _inputTextBox;
+		private readonly TextBox _inputTextBox;
+
+		private static int TerminalCount = 1;
+			
+			public void AppendOutput(string text)
+			{
+				_outputTextBox.AppendText(text);
+			}
 
         public MainForm()
         {
@@ -21,7 +28,7 @@ namespace PowerShellTerminal
 
         private void InitializeComponent()
         {
-            Text = "PowerShell Terminal";
+            Text = $"PowerShell Terminal #{TerminalCount}";
             Size = new Size(800, 600);
             StartPosition = FormStartPosition.CenterScreen;
             BackColor = Color.Black;
@@ -33,7 +40,8 @@ namespace PowerShellTerminal
             _outputTextBox.BackColor = Color.Black;
             _outputTextBox.ForeColor = Color.Lime;
             _outputTextBox.Font = new Font("Consolas", 11);
-            _outputTextBox.BorderStyle = BorderStyle.None;
+			   _outputTextBox.BorderStyle = BorderStyle.None;
+				
 
             _inputTextBox.Dock = DockStyle.Bottom;
             _inputTextBox.BackColor = Color.Black;
@@ -52,19 +60,20 @@ namespace PowerShellTerminal
                     {
                         _inputTextBox.Clear();
                         _outputTextBox.AppendText($"PS> {command}\r\n");
-
+						
 								if (command.Equals("newTerminal", StringComparison.OrdinalIgnoreCase))
 									{
 										
 										MainForm newForm = new MainForm();
+										TerminalCount++;
+										newForm.AppendOutput($"[Info] Створено новий термінал #{TerminalCount}\r\n\r\n");
 										newForm.Show();
-
-										_outputTextBox.AppendText("[Info] Створено новий термінал\r\n\r\n");
 
 										e.Handled = true;
 										e.SuppressKeyPress = true;
 										return;
 									}
+
 
                         if (command.StartsWith("changeColor ", StringComparison.OrdinalIgnoreCase))
                         {
