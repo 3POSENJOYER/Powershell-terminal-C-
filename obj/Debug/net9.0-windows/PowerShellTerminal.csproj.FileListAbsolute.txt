@@ -364,3 +364,4 @@ c:\Users\eresk\PowerShellTerminal\obj\Debug\net9.0-windows\refint\PowerShellTerm
 c:\Users\eresk\PowerShellTerminal\obj\Debug\net9.0-windows\PowerShellTerminal.pdb
 c:\Users\eresk\PowerShellTerminal\obj\Debug\net9.0-windows\PowerShellTerminal.genruntimeconfig.cache
 c:\Users\eresk\PowerShellTerminal\obj\Debug\net9.0-windows\ref\PowerShellTerminal.dll
+c:\Users\eresk\PowerShellTerminal\obj\Debug\net9.0-windows\PowerShellTerminal.sourcelink.json
