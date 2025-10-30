@@ -1,4 +1,4 @@
-Powershell Terminal (C#)
+Powershell Terminal (C#) this is just the initial version!!
 # Powershell Terminal (C# 8) — README
 
 
