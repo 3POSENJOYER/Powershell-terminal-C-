@@ -2,12 +2,6 @@ Powershell Terminal (C#)
 # Powershell Terminal (C# 8) — README
 
 
----
-
-See `docs/architecture.md` for detailed diagrams.
-
----
-
 ## Requirements
 
 * **.NET Core 3.1+** (works with .NET 5 / 6 / 7)
