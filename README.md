@@ -24,10 +24,11 @@ Install-Package System.Management.Automation
 Install-Package Microsoft.PowerShell.SDK
 ```
 
-2. Build:
+2. Build/run:
 
 ```bash
 dotnet build
+dotnet run
 ```
 ##  Basic Commands for Testing
 
