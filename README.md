@@ -1,7 +1,7 @@
 Powershell Terminal (C#) this is just the initial version!!
 # Powershell Terminal (C# 8) — README
 
-+-------------------+ +---------------------------+ | MainForm |<>------->| PowerShellInterpreter | +-------------------+ +---------------------------+ | +inputCommand() | | +executeCommand(cmd) | | +displayResult() | | +setStrategy(strategy) | +-------------------+ +---------------------------+ | | uses v +---------------------------+ | IExecutionStrategy | +---------------------------+ | +execute(cmd):CommandResult| +---------------------------+ ^ | +----------------+----------------+ | | +---------------------------+ +---------------------------+ | LocalExecutionStrategy | | AsyncExecutionStrategy | +---------------------------+ +---------------------------+ | +execute(cmd):CommandResult| | +execute(cmd):CommandResult| +---------------------------+ +---------------------------+ | v +---------------------------+ | CommandResult | +---------------------------+ | Output | | ErrorMessage | | ExitCode | | Duration | +---------------------------+
+
 ## Requirements
 
 * **.NET Core 3.1+** (works with .NET 5 / 6 / 7)
