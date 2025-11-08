@@ -49,9 +49,9 @@ Remove-Item test.txt
 System information:
 $PSVersionTable          
 Get-ComputerInfo           
-Get-Host        
-
-Just commands:
+Get-Host
+   
+Commands:
 echo "Hello, World!"       
 Write-Host "Hello!"      
 1+1                        
