@@ -1,17 +1,17 @@
 {
   "format": 1,
   "restore": {
-    "c:\\Users\\eresk\\PowerShellTerminal\\PowerShellTerminal.csproj": {}
+    "C:\\Users\\eresk\\PowerShellTerminal\\PowerShellTerminal.csproj": {}
   },
   "projects": {
-    "c:\\Users\\eresk\\PowerShellTerminal\\PowerShellTerminal.csproj": {
+    "C:\\Users\\eresk\\PowerShellTerminal\\PowerShellTerminal.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "c:\\Users\\eresk\\PowerShellTerminal\\PowerShellTerminal.csproj",
+        "projectUniqueName": "C:\\Users\\eresk\\PowerShellTerminal\\PowerShellTerminal.csproj",
         "projectName": "PowerShellTerminal",
-        "projectPath": "c:\\Users\\eresk\\PowerShellTerminal\\PowerShellTerminal.csproj",
+        "projectPath": "C:\\Users\\eresk\\PowerShellTerminal\\PowerShellTerminal.csproj",
         "packagesPath": "C:\\Users\\eresk\\.nuget\\packages\\",
-        "outputPath": "c:\\Users\\eresk\\PowerShellTerminal\\obj\\",
+        "outputPath": "C:\\Users\\eresk\\PowerShellTerminal\\obj\\",
         "projectStyle": "PackageReference",
         "configFilePaths": [
           "C:\\Users\\eresk\\AppData\\Roaming\\NuGet\\NuGet.Config"
