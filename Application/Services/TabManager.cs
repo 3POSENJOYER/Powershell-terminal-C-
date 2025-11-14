@@ -1,6 +1,6 @@
 public class TabManager
 {
-    private TabControl _tabControl;
+    private TabControl;
     private List
 
     public void CreateNewTab() { }
