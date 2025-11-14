@@ -1,8 +1,8 @@
 {
   "version": 2,
-  "dgSpecHash": "aFREN35p2iI=",
+  "dgSpecHash": "CJD4ivdAhIs=",
   "success": true,
-  "projectFilePath": "c:\\Users\\eresk\\PowerShellTerminal\\PowerShellTerminal.csproj",
+  "projectFilePath": "C:\\Users\\eresk\\PowerShellTerminal\\PowerShellTerminal.csproj",
   "expectedPackageFiles": [
     "C:\\Users\\eresk\\.nuget\\packages\\humanizer.core\\2.14.1\\humanizer.core.2.14.1.nupkg.sha512",
     "C:\\Users\\eresk\\.nuget\\packages\\json.more.net\\2.0.2\\json.more.net.2.0.2.nupkg.sha512",
