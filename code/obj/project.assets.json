@@ -7738,11 +7738,11 @@
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "C:\\Users\\eresk\\PowerShellTerminal\\PowerShellTerminal.csproj",
+      "projectUniqueName": "C:\\Users\\eresk\\PowerShellTerminal\\code\\PowerShellTerminal.csproj",
       "projectName": "PowerShellTerminal",
-      "projectPath": "C:\\Users\\eresk\\PowerShellTerminal\\PowerShellTerminal.csproj",
+      "projectPath": "C:\\Users\\eresk\\PowerShellTerminal\\code\\PowerShellTerminal.csproj",
       "packagesPath": "C:\\Users\\eresk\\.nuget\\packages\\",
-      "outputPath": "C:\\Users\\eresk\\PowerShellTerminal\\obj\\",
+      "outputPath": "C:\\Users\\eresk\\PowerShellTerminal\\code\\obj\\",
       "projectStyle": "PackageReference",
       "configFilePaths": [
         "C:\\Users\\eresk\\AppData\\Roaming\\NuGet\\NuGet.Config"
