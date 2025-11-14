@@ -1,14 +1,9 @@
-
-namespace PowerShellTerminal
+public class MainForm : Form
 {
-	public class MainForm : Form
-	{
+    private TabManager _tabManager;
+    private ThemeManager _themeManager;
+    private HistoryService _historyService;
+    private MenuStrip _menuStrip;
 
-		public MainForm()
-		{
-
-		}
-	}
+    public MainForm() { }
 }
-        
-       

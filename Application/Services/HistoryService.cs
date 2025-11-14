@@ -1,7 +1,7 @@
 namespace PowerShellTerminal.Services
 {
-	public class TabManager
+	public class HistoryService
 	{
 
 	}
-}
+} 
