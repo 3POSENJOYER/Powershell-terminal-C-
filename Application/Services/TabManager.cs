@@ -1,7 +1,7 @@
 public class TabManager
 {
     private TabControl _tabControl;
-    private List<TerminalTab> _tabs;
+    private List
 
     public void CreateNewTab() { }
     public void CloseCurrentTab() { }
