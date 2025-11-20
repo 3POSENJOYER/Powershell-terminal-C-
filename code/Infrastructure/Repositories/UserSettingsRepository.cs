@@ -1,6 +1,7 @@
 using PowerShellTerminal.Domain.Entities;
 using PowerShellTerminal.Infrastructure.Data;
 using Microsoft.EntityFrameworkCore;
+using System.Windows.Forms;
 
 namespace PowerShellTerminal.Infrastructure.Repositories
 {
@@ -11,20 +12,7 @@ namespace PowerShellTerminal.Infrastructure.Repositories
         public UserSettingsRepository()
         {
             _context = new TerminalDbContext();
-            EnsureDatabaseCreated();
-        }
-
-        private void EnsureDatabaseCreated()
-        {
-            try
-            {
-                _context.Database.EnsureCreated();
-                Console.WriteLine("✅ UserSettingsRepository: Database ensured");
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine($"❌ UserSettingsRepository: Database creation failed: {ex.Message}");
-            }
+            _context.Database.EnsureCreated();
         }
 
         public async Task<UserSettings> GetByIdAsync(int id)
@@ -70,12 +58,10 @@ namespace PowerShellTerminal.Infrastructure.Repositories
             var settings = await _context.UserSettings.FirstOrDefaultAsync();
             if (settings == null)
             {
-                Console.WriteLine("📝 Creating default user settings...");
                 // Створюємо налаштування за замовчуванням
                 settings = new UserSettings();
                 await _context.UserSettings.AddAsync(settings);
                 await _context.SaveChangesAsync();
-                Console.WriteLine("✅ Default user settings created");
             }
             return settings;
         }
@@ -105,7 +91,6 @@ namespace PowerShellTerminal.Infrastructure.Repositories
             }
             
             await _context.SaveChangesAsync();
-            Console.WriteLine("✅ User settings saved to database");
         }
 
         public void Dispose()
