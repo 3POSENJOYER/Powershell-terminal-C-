@@ -1,10 +1,61 @@
-public class TabManager
-{
-    private TabControl;
-    private List
+using PowerShellTerminal.Application.Services;
+using PowerShellTerminal.Domain.Models;
+using System.Windows.Forms;
 
-    public void CreateNewTab() { }
-    public void CloseCurrentTab() { }
-    public void SplitHorizontal() { }
-    public void SplitVertical() { }
+namespace PowerShellTerminal.Application.Services
+{
+    public class TabManager
+    {
+        private TabControl _tabControl;
+        private List<TerminalTab> _tabs;
+        private ThemeManager _themeManager;
+        private HistoryService _historyService;
+
+        public TabManager(TabControl tabControl, ThemeManager themeManager, HistoryService historyService)
+        {
+            _tabControl = tabControl;
+            _tabs = new List<TerminalTab>();
+            _themeManager = themeManager;
+            _historyService = historyService;
+        }
+
+        public void CreateNewTab()
+        {
+            var terminalTab = new TerminalTab(_themeManager, _historyService);
+            terminalTab.TabPage.Text = $"PowerShell {_tabs.Count + 1}";
+            
+            _tabControl.TabPages.Add(terminalTab.TabPage);
+            _tabs.Add(terminalTab);
+            _tabControl.SelectedTab = terminalTab.TabPage;
+            
+            // Застосовуємо поточну тему
+            terminalTab.ApplyTheme(_themeManager.GetCurrentTheme());
+        }
+
+        public void CloseCurrentTab()
+        {
+            if (_tabControl.TabPages.Count > 1) // Залишаємо хоча б одну вкладку
+            {
+                var currentTab = _tabControl.SelectedTab;
+                _tabControl.TabPages.Remove(currentTab);
+                
+                // Видаляємо зі списку
+                var tabToRemove = _tabs.FirstOrDefault(t => t.TabPage == currentTab);
+                if (tabToRemove != null)
+                {
+                    _tabs.Remove(tabToRemove);
+                }
+            }
+            else
+            {
+                MessageBox.Show("Cannot close the last tab.", "Information", 
+                    MessageBoxButtons.OK, MessageBoxIcon.Information);
+            }
+        }
+
+        public TerminalTab GetCurrentTab()
+        {
+            return _tabs.FirstOrDefault(t => t.TabPage == _tabControl.SelectedTab);
+        }
+    }
 }

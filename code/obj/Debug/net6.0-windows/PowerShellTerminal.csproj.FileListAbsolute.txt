@@ -1,0 +1,6 @@
+C:\Users\eresk\PowerShellTerminal\code\obj\Debug\net6.0-windows\PowerShellTerminal.csproj.AssemblyReference.cache
+C:\Users\eresk\PowerShellTerminal\code\obj\Debug\net6.0-windows\PowerShellTerminal.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\eresk\PowerShellTerminal\code\obj\Debug\net6.0-windows\PowerShellTerminal.AssemblyInfoInputs.cache
+C:\Users\eresk\PowerShellTerminal\code\obj\Debug\net6.0-windows\PowerShellTerminal.AssemblyInfo.cs
+C:\Users\eresk\PowerShellTerminal\code\obj\Debug\net6.0-windows\PowerShellTerminal.csproj.CoreCompileInputs.cache
+C:\Users\eresk\PowerShellTerminal\code\obj\Debug\net6.0-windows\PowerShellTerminal.sourcelink.json

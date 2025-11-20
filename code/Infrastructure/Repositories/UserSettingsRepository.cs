@@ -1,15 +1,116 @@
-public class UserSettingsRepository
+using PowerShellTerminal.Domain.Entities;
+using PowerShellTerminal.Infrastructure.Data;
+using Microsoft.EntityFrameworkCore;
+
+namespace PowerShellTerminal.Infrastructure.Repositories
 {
-    private TerminalDbContext _context;
+    public class UserSettingsRepository : IDisposable
+    {
+        private readonly TerminalDbContext _context;
 
-    public Task GetByIdAsync() => null;
-    public Task GetAllAsync() => null;
-    public Task FindAsync() => null;
-    public Task AddAsync() => null;
-    public Task UpdateAsync() => null;
-    public Task DeleteAsync() => null;
-    public Task SaveAsync() => null;
+        public UserSettingsRepository()
+        {
+            _context = new TerminalDbContext();
+            EnsureDatabaseCreated();
+        }
 
-    public Task GetUserSettingsAsync() => null;
-    public Task SaveUserSettingsAsync() => null;
+        private void EnsureDatabaseCreated()
+        {
+            try
+            {
+                _context.Database.EnsureCreated();
+                Console.WriteLine("✅ UserSettingsRepository: Database ensured");
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"❌ UserSettingsRepository: Database creation failed: {ex.Message}");
+            }
+        }
+
+        public async Task<UserSettings> GetByIdAsync(int id)
+        {
+            return await _context.UserSettings.FindAsync(id);
+        }
+
+        public async Task<List<UserSettings>> GetAllAsync()
+        {
+            return await _context.UserSettings.ToListAsync();
+        }
+
+        public async Task<List<UserSettings>> FindAsync(Func<UserSettings, bool> predicate)
+        {
+            return await Task.Run(() => _context.UserSettings.Where(predicate).ToList());
+        }
+
+        public async Task AddAsync(UserSettings entity)
+        {
+            await _context.UserSettings.AddAsync(entity);
+            await _context.SaveChangesAsync();
+        }
+
+        public async Task UpdateAsync(UserSettings entity)
+        {
+            _context.UserSettings.Update(entity);
+            await _context.SaveChangesAsync();
+        }
+
+        public async Task DeleteAsync(UserSettings entity)
+        {
+            _context.UserSettings.Remove(entity);
+            await _context.SaveChangesAsync();
+        }
+
+        public async Task SaveAsync()
+        {
+            await _context.SaveChangesAsync();
+        }
+
+        public async Task<UserSettings> GetUserSettingsAsync()
+        {
+            var settings = await _context.UserSettings.FirstOrDefaultAsync();
+            if (settings == null)
+            {
+                Console.WriteLine("📝 Creating default user settings...");
+                // Створюємо налаштування за замовчуванням
+                settings = new UserSettings();
+                await _context.UserSettings.AddAsync(settings);
+                await _context.SaveChangesAsync();
+                Console.WriteLine("✅ Default user settings created");
+            }
+            return settings;
+        }
+
+        public async Task SaveUserSettingsAsync(UserSettings settings)
+        {
+            var existing = await _context.UserSettings.FirstOrDefaultAsync();
+            if (existing != null)
+            {
+                // Оновлюємо існуючі налаштування
+                existing.ThemeName = settings.ThemeName;
+                existing.FontFamily = settings.FontFamily;
+                existing.FontSize = settings.FontSize;
+                existing.BackgroundColor = settings.BackgroundColor;
+                existing.ForegroundColor = settings.ForegroundColor;
+                existing.WindowWidth = settings.WindowWidth;
+                existing.WindowHeight = settings.WindowHeight;
+                existing.LastModified = DateTime.Now;
+                
+                _context.UserSettings.Update(existing);
+            }
+            else
+            {
+                // Додаємо нові налаштування
+                settings.LastModified = DateTime.Now;
+                await _context.UserSettings.AddAsync(settings);
+            }
+            
+            await _context.SaveChangesAsync();
+            Console.WriteLine("✅ User settings saved to database");
+        }
+
+        public void Dispose()
+        {
+            _context?.Dispose();
+        }
+    }
 }
