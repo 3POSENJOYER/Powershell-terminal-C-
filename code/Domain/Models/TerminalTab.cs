@@ -15,11 +15,11 @@ namespace PowerShellTerminal.Domain.Models
             TerminalControl = new TerminalControl(Interpreter, historyService);
             TabPage = new TabPage("PowerShell");
             
-            // Додаємо контрол на вкладку
+            
             TerminalControl.AsControl().Dock = DockStyle.Fill;
             TabPage.Controls.Add(TerminalControl.AsControl());
             
-            // Фокусуємося на полі вводу при активації вкладки
+        
             TabPage.Enter += (s, e) => TerminalControl.FocusInput();
         }
 
