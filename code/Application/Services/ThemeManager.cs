@@ -10,13 +10,7 @@ namespace PowerShellTerminal.Application.Services
 
         public ThemeManager()
         {
-            _currentTheme = new TerminalTheme
-            {
-                BackgroundColor = Color.Black,
-                ForegroundColor = Color.Lime,
-                ErrorColor = Color.Red,
-                DefaultFont = new Font("Consolas", 10)
-            };
+            _currentTheme = new TerminalTheme();
         }
 
         public void ApplyTheme(UserSettings settings = null)
@@ -31,21 +25,27 @@ namespace PowerShellTerminal.Application.Services
                     DefaultFont = new Font(settings.FontFamily, settings.FontSize)
                 };
             }
+            
+            // Apply theme to all open tabs/windows
+            // Implementation would iterate through all terminal controls
         }
 
         public void ChangeFontSize(int size)
         {
             _currentTheme.DefaultFont = new Font(_currentTheme.DefaultFont.FontFamily, size);
+            ApplyTheme();
         }
 
         public void ChangeBackgroundColor(Color color)
         {
             _currentTheme.BackgroundColor = color;
+            ApplyTheme();
         }
 
         public void ChangeTextColor(Color color)
         {
             _currentTheme.ForegroundColor = color;
+            ApplyTheme();
         }
 
         public TerminalTheme GetCurrentTheme() => _currentTheme;
