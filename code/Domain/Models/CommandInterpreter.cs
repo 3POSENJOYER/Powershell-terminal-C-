@@ -1,58 +1,48 @@
-using System.Diagnostics;
+using System.Threading.Tasks;
 
 namespace PowerShellTerminal.Domain.Models
 {
     public class CommandInterpreter
     {
-        public async Task<string> ExecuteCommand(string command)
+        private ICommandStrategy _strategy;
+
+        public CommandInterpreter()
         {
-            try
-            {
-                var processStartInfo = new ProcessStartInfo
-                {
-                    FileName = "powershell.exe",
-                    Arguments = $"-NoProfile -ExecutionPolicy Bypass -Command \"{EscapeCommand(command)}\"",
-                    RedirectStandardOutput = true,
-                    RedirectStandardError = true,
-                    UseShellExecute = false,
-                    CreateNoWindow = true,
-                    StandardOutputEncoding = System.Text.Encoding.UTF8,
-                    StandardErrorEncoding = System.Text.Encoding.UTF8
-                };
-
-                using var process = new Process();
-                process.StartInfo = processStartInfo;
-                
-                Console.WriteLine($"Executing: {command}");
-                
-                process.Start();
-                
-                string output = await process.StandardOutput.ReadToEndAsync();
-                string error = await process.StandardError.ReadToEndAsync();
-                
-                await process.WaitForExitAsync();
-                
-                if (!string.IsNullOrEmpty(error))
-                {
-                    if (!string.IsNullOrEmpty(output))
-                        output += Environment.NewLine + "Error: " + error;
-                    else
-                        output = "Error: " + error;
-                }
-
-                return string.IsNullOrEmpty(output) ? "Command executed successfully." : output.Trim();
-            }
-            catch (Exception ex)
-            {
-                return $"Error: {ex.Message}";
-            }
+            _strategy = new PowerShellCommandStrategy();
         }
 
-        private string EscapeCommand(string command)
+        public void SetStrategy(ICommandStrategy strategy)
         {
-            return command.Replace("\"", "\\\"")
-                         .Replace("`", "``")
-                         .Replace("$", "`$");
+            _strategy = strategy;
+        }
+
+        public Expression Parse(string input)
+        {
+            var parts = input.Split(';', System.StringSplitOptions.RemoveEmptyEntries);
+            
+            if (parts.Length == 1)
+            {
+                return new TerminalExpression(input.Trim());
+            }
+
+            var nonTerminal = new NonTerminalExpression();
+            foreach (var part in parts)
+            {
+                nonTerminal.AddChild(new TerminalExpression(part.Trim()));
+            }
+            return nonTerminal;
+        }
+
+        public void Execute(string input)
+        {
+            var expression = Parse(input);
+            var context = new CommandContext();
+            expression.Interpret(context);
+        }
+
+        public async Task<CommandResult> ExecuteCommand(string command)
+        {
+            return await _strategy.ExecuteAsync(command);
         }
     }
 }

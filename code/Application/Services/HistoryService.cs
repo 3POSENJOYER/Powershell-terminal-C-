@@ -11,7 +11,7 @@ namespace PowerShellTerminal.Application.Services
 
         public HistoryService()
         {
-            // Ініціалізуємо базу даних перед створенням репозиторіїв
+            
             InitializeDatabase();
             
             _commandHistoryRepo = new CommandHistoryRepository();
@@ -37,7 +37,7 @@ namespace PowerShellTerminal.Application.Services
         {
             try
             {
-                Console.WriteLine($"💾 Saving command to database: {command}");
+                Console.WriteLine($"Saving command to database: {command}");
                 
                 await _commandHistoryRepo.AddAsync(new CommandHistory
                 {
@@ -50,11 +50,11 @@ namespace PowerShellTerminal.Application.Services
                     SessionId = sessionId
                 });
                 
-                Console.WriteLine($"✅ Command successfully saved to database: {command}");
+                Console.WriteLine($" Command successfully saved to database: {command}");
             }
             catch (Exception ex)
             {
-                Console.WriteLine($"❌ Failed to save command to database: {ex.Message}");
+                Console.WriteLine($" Failed to save command to database: {ex.Message}");
                 Console.WriteLine($"Stack trace: {ex.StackTrace}");
             }
         }
@@ -89,26 +89,26 @@ namespace PowerShellTerminal.Application.Services
         {
             try
             {
-                Console.WriteLine("🔍 Testing database connection...");
+                Console.WriteLine(" Testing database connection...");
                 
-                // Тестуємо створення таблиць
+               
                 using var context = new Infrastructure.Data.TerminalDbContext();
                 bool created = context.Database.EnsureCreated();
                 Console.WriteLine($"Database ensured: {created}");
                 
-                // Тестуємо UserSettings
-                var testSettings = await _userSettingsRepo.GetUserSettingsAsync();
-                Console.WriteLine($"✅ Database connection: OK");
-                Console.WriteLine($"👤 Current user: {testSettings.UserName}");
                 
-                // Тестуємо CommandHistory
+                var testSettings = await _userSettingsRepo.GetUserSettingsAsync();
+                Console.WriteLine($" Database connection: OK");
+                Console.WriteLine($" Current user: {testSettings.UserName}");
+                
+                
                 var recentCommands = await _commandHistoryRepo.GetRecentCommandsAsync(1);
-                Console.WriteLine($"📊 Commands in database: {recentCommands.Count}");
+                Console.WriteLine($"Commands in database: {recentCommands.Count}");
                 
             }
             catch (Exception ex)
             {
-                Console.WriteLine($"❌ Database connection failed: {ex.Message}");
+                Console.WriteLine($" Database connection failed: {ex.Message}");
                 Console.WriteLine($"Stack trace: {ex.StackTrace}");
             }
         }

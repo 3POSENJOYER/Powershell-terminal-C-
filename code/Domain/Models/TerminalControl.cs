@@ -23,11 +23,9 @@ namespace PowerShellTerminal.Domain.Models
 
         private void InitializeComponent()
         {
-            // Основні налаштування
             this.Dock = DockStyle.Fill;
             this.BackColor = Color.Black;
 
-            // Вихідне поле
             _outputBox = new RichTextBox();
             _outputBox.Dock = DockStyle.Fill;
             _outputBox.BackColor = Color.Black;
@@ -37,13 +35,11 @@ namespace PowerShellTerminal.Domain.Models
             _outputBox.BorderStyle = BorderStyle.None;
             _outputBox.ScrollBars = RichTextBoxScrollBars.Vertical;
 
-            // Панель вводу
             _inputPanel = new Panel();
             _inputPanel.Dock = DockStyle.Bottom;
             _inputPanel.Height = 30;
             _inputPanel.BackColor = Color.Black;
 
-            // Промпт
             _promptLabel = new Label();
             _promptLabel.Text = "PS> ";
             _promptLabel.ForeColor = Color.White;
@@ -53,7 +49,6 @@ namespace PowerShellTerminal.Domain.Models
             _promptLabel.Width = 40;
             _promptLabel.TextAlign = ContentAlignment.MiddleLeft;
 
-            // Поле вводу
             _inputBox = new TextBox();
             _inputBox.Dock = DockStyle.Fill;
             _inputBox.BackColor = Color.Black;
@@ -61,14 +56,11 @@ namespace PowerShellTerminal.Domain.Models
             _inputBox.Font = new Font("Consolas", 10);
             _inputBox.BorderStyle = BorderStyle.FixedSingle;
 
-            // Додаємо обробник подій для поля вводу
             _inputBox.KeyDown += InputBox_KeyDown;
 
-            // Додаємо елементи на панель вводу
             _inputPanel.Controls.Add(_inputBox);
             _inputPanel.Controls.Add(_promptLabel);
-
-            // Додаємо елементи на форму
+  
             this.Controls.Add(_outputBox);
             this.Controls.Add(_inputPanel);
         }
@@ -97,23 +89,23 @@ namespace PowerShellTerminal.Domain.Models
             try
             {
                 // Виконуємо команду
-                string result = await _interpreter.ExecuteCommand(command);
+                var result = await _interpreter.ExecuteCommand(command);
                 
                 // Показуємо результат
-                if (!string.IsNullOrWhiteSpace(result))
+                if (result != null && !string.IsNullOrWhiteSpace(result.Output))
                 {
-                    WriteOutput(result, Color.Lime);
+                    WriteOutput(result.Output, Color.Lime);
                 }
 
                 // Зберігаємо в історію
-                await SaveCommandToHistory(command, result);
+                await SaveCommandToHistory(command, result?.Output);
             }
             catch (Exception ex)
             {
                 WriteOutput($"Error: {ex.Message}", Color.Red);
             }
 
-            WriteOutput("", Color.Lime); // Пустий рядок
+            WriteOutput("", Color.Lime); 
         }
 
         private async Task SaveCommandToHistory(string command, string output)
@@ -133,11 +125,11 @@ namespace PowerShellTerminal.Domain.Models
                     1
                 );
 
-                Console.WriteLine($"✅ Command saved to database: {command}");
+                Console.WriteLine($"Command saved to database: {command}");
             }
             catch (Exception ex)
             {
-                Console.WriteLine($"❌ Failed to save command: {ex.Message}");
+                Console.WriteLine($" Failed to save command: {ex.Message}");
                 WriteOutput($"History error: {ex.Message}", Color.Red);
             }
         }

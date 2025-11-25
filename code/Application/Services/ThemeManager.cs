@@ -1,16 +1,36 @@
 using PowerShellTerminal.Domain.Entities;
 using PowerShellTerminal.Domain.Models;
+using PowerShellTerminal.Domain.Observer;
 using System.Drawing;
 
 namespace PowerShellTerminal.Application.Services
 {
-    public class ThemeManager
+    public class ThemeManager : ISubject
     {
         private TerminalTheme _currentTheme;
+        private List<IObserver> _observers = new();
 
         public ThemeManager()
         {
             _currentTheme = new TerminalTheme();
+        }
+
+        public void Attach(IObserver observer)
+        {
+            _observers.Add(observer);
+        }
+
+        public void Detach(IObserver observer)
+        {
+            _observers.Remove(observer);
+        }
+
+        public void Notify()
+        {
+            foreach (var observer in _observers)
+            {
+                observer.Notify();
+            }
         }
 
         public void ApplyTheme(UserSettings settings = null)
@@ -26,26 +46,25 @@ namespace PowerShellTerminal.Application.Services
                 };
             }
             
-            // Apply theme to all open tabs/windows
-            // Implementation would iterate through all terminal controls
+            Notify();
         }
 
         public void ChangeFontSize(int size)
         {
             _currentTheme.DefaultFont = new Font(_currentTheme.DefaultFont.FontFamily, size);
-            ApplyTheme();
+            Notify();
         }
 
         public void ChangeBackgroundColor(Color color)
         {
             _currentTheme.BackgroundColor = color;
-            ApplyTheme();
+            Notify();
         }
 
         public void ChangeTextColor(Color color)
         {
             _currentTheme.ForegroundColor = color;
-            ApplyTheme();
+            Notify();
         }
 
         public TerminalTheme GetCurrentTheme() => _currentTheme;

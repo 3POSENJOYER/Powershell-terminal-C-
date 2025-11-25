@@ -10,7 +10,7 @@ namespace PowerShellTerminal
         [STAThread]
         static void Main()
         {
-            DatabaseInitializer.Initialize(); // переконайся, що БД готова
+            DatabaseInitializer.Initialize(); 
 
             WinFormsApp.EnableVisualStyles();
             WinFormsApp.SetCompatibleTextRenderingDefault(false);

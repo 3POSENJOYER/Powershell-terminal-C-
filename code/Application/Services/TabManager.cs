@@ -27,19 +27,17 @@ namespace PowerShellTerminal.Application.Services
             _tabControl.TabPages.Add(terminalTab.TabPage);
             _tabs.Add(terminalTab);
             _tabControl.SelectedTab = terminalTab.TabPage;
-            
-            // Застосовуємо поточну тему
+
             terminalTab.ApplyTheme(_themeManager.GetCurrentTheme());
         }
 
         public void CloseCurrentTab()
         {
-            if (_tabControl.TabPages.Count > 1) // Залишаємо хоча б одну вкладку
+            if (_tabControl.TabPages.Count > 1) 
             {
                 var currentTab = _tabControl.SelectedTab;
                 _tabControl.TabPages.Remove(currentTab);
                 
-                // Видаляємо зі списку
                 var tabToRemove = _tabs.FirstOrDefault(t => t.TabPage == currentTab);
                 if (tabToRemove != null)
                 {
