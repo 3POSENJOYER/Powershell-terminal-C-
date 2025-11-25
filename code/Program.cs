@@ -1,7 +1,7 @@
-using WinFormsApp = System.Windows.Forms.Application;
 using System;
 using System.Windows.Forms;
 using PowerShellTerminal.Infrastructure;
+using WinFormsApp = System.Windows.Forms.Application;
 
 namespace PowerShellTerminal
 {
@@ -10,34 +10,29 @@ namespace PowerShellTerminal
         [STAThread]
         static void Main()
         {
-            DatabaseInitializer.Initialize(); 
+            // Initialize database.
+            DatabaseInitializer.Initialize();
 
+            // Setup Windows Forms.
             WinFormsApp.EnableVisualStyles();
             WinFormsApp.SetCompatibleTextRenderingDefault(false);
 
+            // Setup global exception handlers.
             WinFormsApp.SetUnhandledExceptionMode(UnhandledExceptionMode.CatchException);
-            WinFormsApp.ThreadException += Application_ThreadException;
-            AppDomain.CurrentDomain.UnhandledException += CurrentDomain_UnhandledException;
+            WinFormsApp.ThreadException += (s, e) =>
+                MessageBox.Show($"Error: {e.Exception.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            AppDomain.CurrentDomain.UnhandledException += (s, e) =>
+                MessageBox.Show($"Fatal error: {(e.ExceptionObject as Exception)?.Message}", "Fatal Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
 
+            // Start application.
             try
             {
                 WinFormsApp.Run(new MainForm());
             }
             catch (Exception ex)
             {
-                MessageBox.Show($"Failed to start application: {ex.Message}", "Startup Error",
-                    MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBox.Show($"Startup error: {ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
-        }
-
-        private static void Application_ThreadException(object sender, System.Threading.ThreadExceptionEventArgs e)
-        {
-            MessageBox.Show($"Error: {e.Exception.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
-        }
-
-        private static void CurrentDomain_UnhandledException(object sender, UnhandledExceptionEventArgs e)
-        {
-            MessageBox.Show($"Fatal error: {(e.ExceptionObject as Exception)?.Message}", "Fatal Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
         }
     }
 }

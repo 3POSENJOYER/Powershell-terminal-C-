@@ -10,15 +10,26 @@ namespace PowerShellTerminal.Domain.Models
         public Color ErrorColor { get; set; }
         public Font DefaultFont { get; set; }
 
+        public TerminalTheme CloneTheme()
+        {
+            var copy = new TerminalTheme
+            {
+                BackgroundColor = BackgroundColor,
+                ForegroundColor = ForegroundColor,
+                ErrorColor = ErrorColor
+            };
+
+            if (DefaultFont != null)
+            {
+                copy.DefaultFont = new Font(DefaultFont.FontFamily, DefaultFont.Size, DefaultFont.Style);
+            }
+
+            return copy;
+        }
+
         public IPrototype Clone()
         {
-            return new TerminalTheme
-            {
-                BackgroundColor = this.BackgroundColor,
-                ForegroundColor = this.ForegroundColor,
-                ErrorColor = this.ErrorColor,
-                DefaultFont = this.DefaultFont != null ? new Font(this.DefaultFont, this.DefaultFont.Style) : null
-            };
+            return CloneTheme();
         }
     }
 }

@@ -17,7 +17,7 @@ namespace PowerShellTerminal.Domain.Entities
         public int WindowWidth { get; set; } = 1200;
         public int WindowHeight { get; set; } = 700;
 
-        // Metadata
+        // User metadata
         public string UserName { get; set; } = Environment.UserName;
         public DateTime LastModified { get; set; } = DateTime.UtcNow;
     }

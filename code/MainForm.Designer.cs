@@ -18,9 +18,7 @@ namespace PowerShellTerminal
         {
             this.terminalBox = new System.Windows.Forms.RichTextBox();
             this.SuspendLayout();
-            // 
-            // terminalBox
-            // 
+
             this.terminalBox.Dock = System.Windows.Forms.DockStyle.Fill;
             this.terminalBox.Font = new System.Drawing.Font("Consolas", 12F);
             this.terminalBox.Location = new System.Drawing.Point(0, 0);
@@ -32,9 +30,8 @@ namespace PowerShellTerminal
             this.terminalBox.BackColor = System.Drawing.Color.FromArgb(20, 20, 20);
             this.terminalBox.ForeColor = System.Drawing.Color.FromArgb(230, 230, 230);
             this.terminalBox.ScrollBars = RichTextBoxScrollBars.ForcedVertical;
-            // 
-            // MainForm
-            // 
+
+
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 20F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(800, 450);

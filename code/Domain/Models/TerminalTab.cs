@@ -51,23 +51,27 @@ namespace PowerShellTerminal.Domain.Models
 
         public void Attach(IObserver observer)
         {
-            
         }
 
         public void Detach(IObserver observer)
         {
-            // Implementation for detaching observer
+        }
+
+        // Typed clone helper returning the concrete type for easier use.
+        public TerminalTab CloneTab()
+        {
+            var cloned = new TerminalTab(new ThemeManager(), new HistoryService())
+            {
+                Title = this.Title,
+                Theme = this.Theme?.CloneTheme(),
+                Session = this.Session?.CloneSession()
+            };
+            return cloned;
         }
 
         public IPrototype Clone()
         {
-            var clonedTab = new TerminalTab(new ThemeManager(), new HistoryService())
-            {
-                Title = this.Title,
-                Theme = (TerminalTheme)this.Theme?.Clone(),
-                Session = (PowerShellSession)this.Session?.Clone()
-            };
-            return clonedTab;
+            return CloneTab();
         }
     }
 }

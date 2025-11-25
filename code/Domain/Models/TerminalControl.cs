@@ -1,3 +1,6 @@
+using System;
+using System.IO;
+using System.Threading.Tasks;
 using PowerShellTerminal.Application.Services;
 using System.Drawing;
 using System.Windows.Forms;
@@ -26,35 +29,43 @@ namespace PowerShellTerminal.Domain.Models
             this.Dock = DockStyle.Fill;
             this.BackColor = Color.Black;
 
-            _outputBox = new RichTextBox();
-            _outputBox.Dock = DockStyle.Fill;
-            _outputBox.BackColor = Color.Black;
-            _outputBox.ForeColor = Color.Lime;
-            _outputBox.Font = new Font("Consolas", 10);
-            _outputBox.ReadOnly = true;
-            _outputBox.BorderStyle = BorderStyle.None;
-            _outputBox.ScrollBars = RichTextBoxScrollBars.Vertical;
+            _outputBox = new RichTextBox
+            {
+                Dock = DockStyle.Fill,
+                BackColor = Color.Black,
+                ForeColor = Color.Lime,
+                Font = new Font("Consolas", 10),
+                ReadOnly = true,
+                BorderStyle = BorderStyle.None,
+                ScrollBars = RichTextBoxScrollBars.Vertical
+            };
 
-            _inputPanel = new Panel();
-            _inputPanel.Dock = DockStyle.Bottom;
-            _inputPanel.Height = 30;
-            _inputPanel.BackColor = Color.Black;
+            _inputPanel = new Panel
+            {
+                Dock = DockStyle.Bottom,
+                Height = 30,
+                BackColor = Color.Black
+            };
 
-            _promptLabel = new Label();
-            _promptLabel.Text = "PS> ";
-            _promptLabel.ForeColor = Color.White;
-            _promptLabel.BackColor = Color.Black;
-            _promptLabel.Font = new Font("Consolas", 10);
-            _promptLabel.Dock = DockStyle.Left;
-            _promptLabel.Width = 40;
-            _promptLabel.TextAlign = ContentAlignment.MiddleLeft;
+            _promptLabel = new Label
+            {
+                Text = "PS> ",
+                ForeColor = Color.White,
+                BackColor = Color.Black,
+                Font = new Font("Consolas", 10),
+                Dock = DockStyle.Left,
+                Width = 40,
+                TextAlign = ContentAlignment.MiddleLeft
+            };
 
-            _inputBox = new TextBox();
-            _inputBox.Dock = DockStyle.Fill;
-            _inputBox.BackColor = Color.Black;
-            _inputBox.ForeColor = Color.White;
-            _inputBox.Font = new Font("Consolas", 10);
-            _inputBox.BorderStyle = BorderStyle.FixedSingle;
+            _inputBox = new TextBox
+            {
+                Dock = DockStyle.Fill,
+                BackColor = Color.Black,
+                ForeColor = Color.White,
+                Font = new Font("Consolas", 10),
+                BorderStyle = BorderStyle.FixedSingle
+            };
 
             _inputBox.KeyDown += InputBox_KeyDown;
 
@@ -83,21 +94,17 @@ namespace PowerShellTerminal.Domain.Models
 
         private async Task ExecuteCommandAsync(string command)
         {
-            // Показуємо команду
             WriteOutput($"PS> {command}", Color.Yellow);
 
             try
             {
-                // Виконуємо команду
                 var result = await _interpreter.ExecuteCommand(command);
-                
-                // Показуємо результат
-                if (result != null && !string.IsNullOrWhiteSpace(result.Output))
+
+                if (!string.IsNullOrWhiteSpace(result?.Output))
                 {
                     WriteOutput(result.Output, Color.Lime);
                 }
 
-                // Зберігаємо в історію
                 await SaveCommandToHistory(command, result?.Output);
             }
             catch (Exception ex)
@@ -105,7 +112,7 @@ namespace PowerShellTerminal.Domain.Models
                 WriteOutput($"Error: {ex.Message}", Color.Red);
             }
 
-            WriteOutput("", Color.Lime); 
+            WriteOutput("", Color.Lime);
         }
 
         private async Task SaveCommandToHistory(string command, string output)
@@ -116,14 +123,7 @@ namespace PowerShellTerminal.Domain.Models
                               !output.Contains("Error:") && 
                               !output.Contains("Exception:");
 
-                await _historyService.SaveCommandAsync(
-                    command, 
-                    output ?? "", 
-                    "", 
-                    success, 
-                    Directory.GetCurrentDirectory(), 
-                    1
-                );
+                await _historyService.SaveCommandAsync(command, output ?? "", string.Empty, success, Directory.GetCurrentDirectory(), 1);
 
                 Console.WriteLine($"Command saved to database: {command}");
             }
@@ -153,7 +153,7 @@ namespace PowerShellTerminal.Domain.Models
         {
             WriteOutput("PowerShell Terminal - Ready", Color.Cyan);
             WriteOutput("Type your PowerShell commands below:", Color.Gray);
-            WriteOutput("", Color.Lime);
+            WriteOutput(string.Empty, Color.Lime);
         }
 
         public void FocusInput()

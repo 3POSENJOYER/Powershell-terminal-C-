@@ -2,14 +2,15 @@ using System;
 using System.Diagnostics;
 using System.Linq;
 using System.Windows.Forms;
-using PowerShellTerminal.Infrastructure.Repositories;
 using PowerShellTerminal.Domain.Entities;
+using PowerShellTerminal.Infrastructure.Repositories;
 
 namespace PowerShellTerminal
 {
     public partial class MainForm : Form
     {
-        private CommandHistoryRepository _repository;
+        private readonly CommandHistoryRepository _repository;
+        private const string PROMPT = "PS> ";
 
         public MainForm()
         {
@@ -22,39 +23,33 @@ namespace PowerShellTerminal
         {
             terminalBox.ReadOnly = false;
             terminalBox.ShortcutsEnabled = false;
-
             terminalBox.KeyDown += TerminalBox_KeyDown;
-
-            terminalBox.Text = "PS> ";
+            terminalBox.Text = PROMPT;
             terminalBox.SelectionStart = terminalBox.Text.Length;
         }
 
         private void TerminalBox_KeyDown(object sender, KeyEventArgs e)
         {
-            if (e.KeyCode == Keys.Enter)
+            if (e.KeyCode != Keys.Enter) return;
+            e.SuppressKeyPress = true;
+
+            string fullText = terminalBox.Text;
+            string lastLine = fullText.Split('\n').Last();
+            string command = lastLine.Replace(PROMPT, string.Empty).Trim();
+
+            if (!string.IsNullOrEmpty(command))
             {
-                e.SuppressKeyPress = true;
-
-                string fullText = terminalBox.Text;
-                string commandLine = fullText.Split('\n').Last();
-
-                string command = commandLine.Replace("PS> ", "").Trim();
-
-                ExecuteCommand(command);
+                _ = ExecuteCommand(command);
             }
+
+            terminalBox.AppendText($"\n{PROMPT}");
         }
 
-        private async void ExecuteCommand(string command)
+        private async System.Threading.Tasks.Task ExecuteCommand(string command)
         {
-            if (string.IsNullOrWhiteSpace(command))
-            {
-                terminalBox.AppendText("\nPS> ");
-                return;
-            }
-
             try
             {
-                var psi = new ProcessStartInfo()
+                var psi = new ProcessStartInfo
                 {
                     FileName = "powershell.exe",
                     Arguments = $"-Command \"{command}\"",
@@ -64,15 +59,16 @@ namespace PowerShellTerminal
                     CreateNoWindow = true
                 };
 
-                var process = Process.Start(psi);
+                using var process = Process.Start(psi);
+                if (process == null) return;
 
-                string output = process.StandardOutput.ReadToEnd();
-                string error = process.StandardError.ReadToEnd();
-
+                string output = await process.StandardOutput.ReadToEndAsync();
+                string error = await process.StandardError.ReadToEndAsync();
                 string result = output + error;
 
-                terminalBox.AppendText("\n" + result + "\nPS> ");
+                terminalBox.AppendText(result);
 
+                // Save to history.
                 await _repository.AddAsync(new CommandHistory
                 {
                     Command = command,
@@ -82,7 +78,7 @@ namespace PowerShellTerminal
             }
             catch (Exception ex)
             {
-                terminalBox.AppendText("\nERROR: " + ex.Message + "\nPS> ");
+                terminalBox.AppendText($"Error: {ex.Message}\n");
             }
         }
     }

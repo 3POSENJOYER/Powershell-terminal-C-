@@ -1,3 +1,4 @@
+using System;
 using System.Diagnostics;
 using System.Threading.Tasks;
 
@@ -22,8 +23,15 @@ namespace PowerShellTerminal.Domain.Models
                 };
 
                 using var process = Process.Start(psi);
-                result.Output = await process.StandardOutput.ReadToEndAsync();
-                result.Errors = await process.StandardError.ReadToEndAsync();
+                if (process != null)
+                {
+                    result.Output = await process.StandardOutput.ReadToEndAsync();
+                    result.Errors = await process.StandardError.ReadToEndAsync();
+                }
+                else
+                {
+                    result.Errors = "Failed to start process.";
+                }
             }
             catch (Exception ex)
             {

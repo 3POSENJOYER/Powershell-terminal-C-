@@ -8,14 +8,19 @@ namespace PowerShellTerminal.Domain.Models
         public string TextColor { get; set; }
         public int FontSize { get; set; }
 
-        public IPrototype Clone()
+        public ThemeSettings CloneSettings()
         {
             return new ThemeSettings
             {
-                BackgroundColor = this.BackgroundColor,
-                TextColor = this.TextColor,
-                FontSize = this.FontSize
+                BackgroundColor = BackgroundColor,
+                TextColor = TextColor,
+                FontSize = FontSize
             };
+        }
+
+        public IPrototype Clone()
+        {
+            return CloneSettings();
         }
     }
 }

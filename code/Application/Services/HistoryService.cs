@@ -1,3 +1,6 @@
+using System;
+using System.Collections.Generic;
+using System.Threading.Tasks;
 using PowerShellTerminal.Domain.Entities;
 using PowerShellTerminal.Infrastructure.Repositories;
 
@@ -5,15 +8,13 @@ namespace PowerShellTerminal.Application.Services
 {
     public class HistoryService
     {
-        private CommandHistoryRepository _commandHistoryRepo;
-        private UserSettingsRepository _userSettingsRepo;
-        private TerminalSessionRepository _sessionRepo;
+        private readonly CommandHistoryRepository _commandHistoryRepo;
+        private readonly UserSettingsRepository _userSettingsRepo;
+        private readonly TerminalSessionRepository _sessionRepo;
 
         public HistoryService()
         {
-            
             InitializeDatabase();
-            
             _commandHistoryRepo = new CommandHistoryRepository();
             _userSettingsRepo = new UserSettingsRepository();
             _sessionRepo = new TerminalSessionRepository();
@@ -24,12 +25,11 @@ namespace PowerShellTerminal.Application.Services
             try
             {
                 using var context = new Infrastructure.Data.TerminalDbContext();
-                bool created = context.Database.EnsureCreated();
-                Console.WriteLine($"Database initialized: {created}");
+                context.Database.EnsureCreated();
             }
             catch (Exception ex)
             {
-                Console.WriteLine($"Database initialization failed: {ex.Message}");
+                Console.WriteLine($"Database init error: {ex.Message}");
             }
         }
 
@@ -37,8 +37,6 @@ namespace PowerShellTerminal.Application.Services
         {
             try
             {
-                Console.WriteLine($"Saving command to database: {command}");
-                
                 await _commandHistoryRepo.AddAsync(new CommandHistory
                 {
                     Command = command,
@@ -49,13 +47,10 @@ namespace PowerShellTerminal.Application.Services
                     WorkingDirectory = workingDirectory,
                     SessionId = sessionId
                 });
-                
-                Console.WriteLine($" Command successfully saved to database: {command}");
             }
             catch (Exception ex)
             {
-                Console.WriteLine($" Failed to save command to database: {ex.Message}");
-                Console.WriteLine($"Stack trace: {ex.StackTrace}");
+                Console.WriteLine($"Save error: {ex.Message}");
             }
         }
 
@@ -67,7 +62,7 @@ namespace PowerShellTerminal.Application.Services
             }
             catch (Exception ex)
             {
-                Console.WriteLine($"Failed to get recent commands: {ex.Message}");
+                Console.WriteLine($"Fetch error: {ex.Message}");
                 return new List<CommandHistory>();
             }
         }
@@ -80,36 +75,8 @@ namespace PowerShellTerminal.Application.Services
             }
             catch (Exception ex)
             {
-                Console.WriteLine($"Failed to load user settings: {ex.Message}");
+                Console.WriteLine($"Load settings error: {ex.Message}");
                 return new UserSettings();
-            }
-        }
-
-        public async Task TestDatabaseConnection()
-        {
-            try
-            {
-                Console.WriteLine(" Testing database connection...");
-                
-               
-                using var context = new Infrastructure.Data.TerminalDbContext();
-                bool created = context.Database.EnsureCreated();
-                Console.WriteLine($"Database ensured: {created}");
-                
-                
-                var testSettings = await _userSettingsRepo.GetUserSettingsAsync();
-                Console.WriteLine($" Database connection: OK");
-                Console.WriteLine($" Current user: {testSettings.UserName}");
-                
-                
-                var recentCommands = await _commandHistoryRepo.GetRecentCommandsAsync(1);
-                Console.WriteLine($"Commands in database: {recentCommands.Count}");
-                
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine($" Database connection failed: {ex.Message}");
-                Console.WriteLine($"Stack trace: {ex.StackTrace}");
             }
         }
 
@@ -118,11 +85,10 @@ namespace PowerShellTerminal.Application.Services
             try
             {
                 await _userSettingsRepo.SaveUserSettingsAsync(settings);
-                Console.WriteLine("✅ User settings saved to database");
             }
             catch (Exception ex)
             {
-                Console.WriteLine($"❌ Failed to save user settings: {ex.Message}");
+                Console.WriteLine($"Save settings error: {ex.Message}");
             }
         }
     }

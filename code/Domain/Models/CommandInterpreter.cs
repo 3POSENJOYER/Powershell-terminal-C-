@@ -4,12 +4,7 @@ namespace PowerShellTerminal.Domain.Models
 {
     public class CommandInterpreter
     {
-        private ICommandStrategy _strategy;
-
-        public CommandInterpreter()
-        {
-            _strategy = new PowerShellCommandStrategy();
-        }
+        private ICommandStrategy _strategy = new PowerShellCommandStrategy();
 
         public void SetStrategy(ICommandStrategy strategy)
         {
@@ -19,7 +14,7 @@ namespace PowerShellTerminal.Domain.Models
         public Expression Parse(string input)
         {
             var parts = input.Split(';', System.StringSplitOptions.RemoveEmptyEntries);
-            
+
             if (parts.Length == 1)
             {
                 return new TerminalExpression(input.Trim());
@@ -40,9 +35,10 @@ namespace PowerShellTerminal.Domain.Models
             expression.Interpret(context);
         }
 
-        public async Task<CommandResult> ExecuteCommand(string command)
+        // Return the task directly to keep method simple and fast.
+        public Task<CommandResult> ExecuteCommand(string command)
         {
-            return await _strategy.ExecuteAsync(command);
+            return _strategy.ExecuteAsync(command);
         }
     }
 }

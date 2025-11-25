@@ -1,20 +1,21 @@
+using System;
 using PowerShellTerminal.Infrastructure.Data;
-using System.Windows.Forms;
+
 namespace PowerShellTerminal.Infrastructure
 {
     public static class DatabaseInitializer
     {
+        // Initialize the database and ensure it's created.
         public static void Initialize()
         {
             try
             {
                 using var context = new TerminalDbContext();
                 context.Database.EnsureCreated();
-                Console.WriteLine("Database initialized successfully");
             }
             catch (Exception ex)
             {
-                Console.WriteLine($"Database initialization failed: {ex.Message}");
+                Console.WriteLine($"DB init error: {ex.Message}");
             }
         }
     }

@@ -1,7 +1,10 @@
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
+using Microsoft.EntityFrameworkCore;
 using PowerShellTerminal.Domain.Entities;
 using PowerShellTerminal.Infrastructure.Data;
-using Microsoft.EntityFrameworkCore;
-using System.Windows.Forms;
 
 namespace PowerShellTerminal.Infrastructure.Repositories
 {
@@ -15,27 +18,23 @@ namespace PowerShellTerminal.Infrastructure.Repositories
             _context.Database.EnsureCreated();
         }
 
-        public async Task<UserSettings> GetByIdAsync(int id)
-        {
-            return await _context.UserSettings.FindAsync(id);
-        }
+        public async Task<UserSettings> GetByIdAsync(int id) => await _context.UserSettings.FindAsync(id);
 
-        public async Task<List<UserSettings>> GetAllAsync()
-        {
-            return await _context.UserSettings.ToListAsync();
-        }
+        public async Task<List<UserSettings>> GetAllAsync() => await _context.UserSettings.ToListAsync();
 
         public async Task<List<UserSettings>> FindAsync(Func<UserSettings, bool> predicate)
         {
             return await Task.Run(() => _context.UserSettings.Where(predicate).ToList());
         }
 
+        // Add new settings.
         public async Task AddAsync(UserSettings entity)
         {
             await _context.UserSettings.AddAsync(entity);
             await _context.SaveChangesAsync();
         }
 
+        // Update existing settings.
         public async Task UpdateAsync(UserSettings entity)
         {
             _context.UserSettings.Update(entity);
@@ -48,11 +47,7 @@ namespace PowerShellTerminal.Infrastructure.Repositories
             await _context.SaveChangesAsync();
         }
 
-        public async Task SaveAsync()
-        {
-            await _context.SaveChangesAsync();
-        }
-
+        // Get or create default user settings.
         public async Task<UserSettings> GetUserSettingsAsync()
         {
             var settings = await _context.UserSettings.FirstOrDefaultAsync();
@@ -65,6 +60,7 @@ namespace PowerShellTerminal.Infrastructure.Repositories
             return settings;
         }
 
+        // Save or update user settings.
         public async Task SaveUserSettingsAsync(UserSettings settings)
         {
             var existing = await _context.UserSettings.FirstOrDefaultAsync();
@@ -77,16 +73,14 @@ namespace PowerShellTerminal.Infrastructure.Repositories
                 existing.ForegroundColor = settings.ForegroundColor;
                 existing.WindowWidth = settings.WindowWidth;
                 existing.WindowHeight = settings.WindowHeight;
-                existing.LastModified = DateTime.Now;
-                
+                existing.LastModified = DateTime.UtcNow;
                 _context.UserSettings.Update(existing);
             }
             else
             {
-                settings.LastModified = DateTime.Now;
+                settings.LastModified = DateTime.UtcNow;
                 await _context.UserSettings.AddAsync(settings);
             }
-            
             await _context.SaveChangesAsync();
         }
 
