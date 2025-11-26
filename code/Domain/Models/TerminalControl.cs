@@ -12,11 +12,13 @@ namespace PowerShellTerminal.Domain.Models
         private Panel _inputPanel;
         private CommandInterpreter _interpreter;
         private HistoryService _historyService;
+        private int _sessionId;
 
-        public TerminalControl(CommandInterpreter interpreter, HistoryService historyService)
+        public TerminalControl(CommandInterpreter interpreter, HistoryService historyService, int sessionId)
         {
             _interpreter = interpreter;
             _historyService = historyService;
+            _sessionId = sessionId;
             InitializeComponent();
             ShowWelcomeMessage();
         }
@@ -125,12 +127,12 @@ namespace PowerShellTerminal.Domain.Models
                               !output.Contains("Exception:");
 
                 await _historyService.SaveCommandAsync(
-                    command, 
-                    output ?? "", 
-                    "", 
-                    success, 
-                    Directory.GetCurrentDirectory(), 
-                    1
+                    command,
+                    output ?? "",
+                    "",
+                    success,
+                    Directory.GetCurrentDirectory(),
+                    _sessionId
                 );
 
                 Console.WriteLine($"✅ Command saved to database: {command}");

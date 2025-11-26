@@ -30,6 +30,6 @@ namespace PowerShellTerminal.Infrastructure.Data
             modelBuilder.Entity<CommandHistory>().ToTable("CommandHistory");
             modelBuilder.Entity<TerminalSession>().ToTable("TerminalSession");
             modelBuilder.Entity<UserSettings>().ToTable("UserSettings");
-        }
+        }               
     }
 }

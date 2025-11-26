@@ -26,8 +26,6 @@ namespace PowerShellTerminal.Application.Services
                 };
             }
             
-            // Apply theme to all open tabs/windows
-            // Implementation would iterate through all terminal controls
         }
 
         public void ChangeFontSize(int size)

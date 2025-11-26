@@ -9,17 +9,15 @@ namespace PowerShellTerminal.Domain.Models
         public CommandInterpreter Interpreter { get; set; }
         public TabPage TabPage { get; set; }
 
-        public TerminalTab(ThemeManager themeManager, HistoryService historyService)
+        public TerminalTab(ThemeManager themeManager, HistoryService historyService, int sessionId)
         {
             Interpreter = new CommandInterpreter();
-            TerminalControl = new TerminalControl(Interpreter, historyService);
+            TerminalControl = new TerminalControl(Interpreter, historyService, sessionId);
             TabPage = new TabPage("PowerShell");
-            
-            
+
             TerminalControl.AsControl().Dock = DockStyle.Fill;
             TabPage.Controls.Add(TerminalControl.AsControl());
-            
-        
+
             TabPage.Enter += (s, e) => TerminalControl.FocusInput();
         }
 

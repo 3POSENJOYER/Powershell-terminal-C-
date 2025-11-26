@@ -3,7 +3,10 @@ namespace PowerShellTerminal
     partial class MainForm
     {
         private System.ComponentModel.IContainer components = null;
-        private System.Windows.Forms.RichTextBox terminalBox;
+        private System.Windows.Forms.MenuStrip menuStrip1;
+        private System.Windows.Forms.ToolStripMenuItem fileToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem newTerminalToolStripMenuItem;
+        private System.Windows.Forms.TabControl tabControl;
 
         protected override void Dispose(bool disposing)
         {
@@ -16,32 +19,61 @@ namespace PowerShellTerminal
 
         private void InitializeComponent()
         {
-            this.terminalBox = new System.Windows.Forms.RichTextBox();
+            this.menuStrip1 = new System.Windows.Forms.MenuStrip();
+            this.fileToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.newTerminalToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.tabControl = new System.Windows.Forms.TabControl();
+            this.menuStrip1.SuspendLayout();
             this.SuspendLayout();
             // 
-            // terminalBox
+            // menuStrip1
             // 
-            this.terminalBox.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.terminalBox.Font = new System.Drawing.Font("Consolas", 12F);
-            this.terminalBox.Location = new System.Drawing.Point(0, 0);
-            this.terminalBox.Name = "terminalBox";
-            this.terminalBox.Size = new System.Drawing.Size(800, 450);
-            this.terminalBox.TabIndex = 0;
-            this.terminalBox.Text = "";
-            this.terminalBox.BorderStyle = System.Windows.Forms.BorderStyle.None;
-            this.terminalBox.BackColor = System.Drawing.Color.FromArgb(20, 20, 20);
-            this.terminalBox.ForeColor = System.Drawing.Color.FromArgb(230, 230, 230);
-            this.terminalBox.ScrollBars = RichTextBoxScrollBars.ForcedVertical;
+            this.menuStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.fileToolStripMenuItem});
+            this.menuStrip1.Location = new System.Drawing.Point(0, 0);
+            this.menuStrip1.Name = "menuStrip1";
+            this.menuStrip1.Size = new System.Drawing.Size(800, 24);
+            this.menuStrip1.TabIndex = 0;
+            this.menuStrip1.Text = "menuStrip1";
+            // 
+            // fileToolStripMenuItem
+            // 
+            this.fileToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.newTerminalToolStripMenuItem});
+            this.fileToolStripMenuItem.Name = "fileToolStripMenuItem";
+            this.fileToolStripMenuItem.Size = new System.Drawing.Size(37, 20);
+            this.fileToolStripMenuItem.Text = "File";
+            // 
+            // newTerminalToolStripMenuItem
+            // 
+            this.newTerminalToolStripMenuItem.Name = "newTerminalToolStripMenuItem";
+            this.newTerminalToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.newTerminalToolStripMenuItem.Text = "New Terminal";
+            this.newTerminalToolStripMenuItem.Click += new System.EventHandler(this.newTerminalToolStripMenuItem_Click);
+            // 
+            // tabControl
+            // 
+            this.tabControl.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.tabControl.Location = new System.Drawing.Point(0, 24);
+            this.tabControl.Name = "tabControl";
+            this.tabControl.SelectedIndex = 0;
+            this.tabControl.Size = new System.Drawing.Size(800, 426);
+            this.tabControl.TabIndex = 1;
             // 
             // MainForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 20F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(800, 450);
-            this.Controls.Add(this.terminalBox);
+            this.Controls.Add(this.tabControl);
+            this.Controls.Add(this.menuStrip1);
+            this.MainMenuStrip = this.menuStrip1;
             this.Name = "MainForm";
             this.Text = "PowerShell Terminal";
+            this.menuStrip1.ResumeLayout(false);
+            this.menuStrip1.PerformLayout();
             this.ResumeLayout(false);
+            this.PerformLayout();
 
         }
     }

@@ -1,88 +1,49 @@
 using System;
-using System.Diagnostics;
-using System.Linq;
+using System.Threading.Tasks;
 using System.Windows.Forms;
-using PowerShellTerminal.Infrastructure.Repositories;
+using PowerShellTerminal.Application.Services;
 using PowerShellTerminal.Domain.Entities;
 
 namespace PowerShellTerminal
 {
     public partial class MainForm : Form
     {
-        private CommandHistoryRepository _repository;
+        private TabManager _tabManager;
+        private ThemeManager _themeManager;
+        private HistoryService _historyService;
 
         public MainForm()
         {
             InitializeComponent();
-            _repository = new CommandHistoryRepository();
-            SetupTerminal();
+
+            _historyService = new HistoryService();
+            _themeManager = new ThemeManager();
+            _tabManager = new TabManager(tabControl, _themeManager, _historyService);
+
+            this.Load += MainForm_Load;
         }
 
-        private void SetupTerminal()
+        private async void MainForm_Load(object sender, EventArgs e)
         {
-            terminalBox.ReadOnly = false;
-            terminalBox.ShortcutsEnabled = false;
-
-            terminalBox.KeyDown += TerminalBox_KeyDown;
-
-            terminalBox.Text = "PS> ";
-            terminalBox.SelectionStart = terminalBox.Text.Length;
-        }
-
-        private void TerminalBox_KeyDown(object sender, KeyEventArgs e)
-        {
-            if (e.KeyCode == Keys.Enter)
-            {
-                e.SuppressKeyPress = true;
-
-                string fullText = terminalBox.Text;
-                string commandLine = fullText.Split('\n').Last();
-
-                string command = commandLine.Replace("PS> ", "").Trim();
-
-                ExecuteCommand(command);
-            }
-        }
-
-        private async void ExecuteCommand(string command)
-        {
-            if (string.IsNullOrWhiteSpace(command))
-            {
-                terminalBox.AppendText("\nPS> ");
-                return;
-            }
-
             try
             {
-                var psi = new ProcessStartInfo()
-                {
-                    FileName = "powershell.exe",
-                    Arguments = $"-Command \"{command}\"",
-                    RedirectStandardOutput = true,
-                    RedirectStandardError = true,
-                    UseShellExecute = false,
-                    CreateNoWindow = true
-                };
-
-                var process = Process.Start(psi);
-
-                string output = process.StandardOutput.ReadToEnd();
-                string error = process.StandardError.ReadToEnd();
-
-                string result = output + error;
-
-                terminalBox.AppendText("\n" + result + "\nPS> ");
-
-                await _repository.AddAsync(new CommandHistory
-                {
-                    Command = command,
-                    Output = result,
-                    ExecutedAt = DateTime.Now
-                });
+                await _tabManager.CreateNewTabAsync();
             }
             catch (Exception ex)
             {
-                terminalBox.AppendText("\nERROR: " + ex.Message + "\nPS> ");
+                MessageBox.Show($"Failed to create initial terminal: {ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+        }
+
+        private async void newTerminalToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                await _tabManager.CreateNewTabAsync();
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Failed to create new terminal: {ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
     }

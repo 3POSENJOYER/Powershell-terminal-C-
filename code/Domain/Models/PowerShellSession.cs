@@ -1,20 +1,21 @@
-using PowerShellTerminal.Domain.Prototype;
+using System;
+using System.Collections.Generic;
 
 namespace PowerShellTerminal.Domain.Models
 {
-    public class PowerShellSession : IPrototype
+    public class PowerShellSession
     {
         public string SessionId { get; set; }
         public Dictionary<string, string> Variables { get; set; } = new();
         public Dictionary<string, string> Environment { get; set; } = new();
 
-        public IPrototype Clone()
+        public PowerShellSession Clone()
         {
             return new PowerShellSession
             {
                 SessionId = Guid.NewGuid().ToString(),
-                Variables = new Dictionary<string, string>(this.Variables),
-                Environment = new Dictionary<string, string>(this.Environment)
+                Variables = new Dictionary<string, string>(Variables),
+                Environment = new Dictionary<string, string>(Environment)
             };
         }
     }
