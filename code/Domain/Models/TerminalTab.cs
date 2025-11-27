@@ -16,7 +16,7 @@ namespace PowerShellTerminal.Domain.Models
             Interpreter = new CommandInterpreter();
             TerminalControl = new TerminalControl(Interpreter, historyService, sessionId);
             TabPage = new TabPage("PowerShell");
-
+                                                        
             TerminalControl.AsControl().Dock = DockStyle.Fill;
             TabPage.Controls.Add(TerminalControl.AsControl());
 

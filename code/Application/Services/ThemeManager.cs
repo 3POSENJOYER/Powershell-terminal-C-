@@ -29,14 +29,47 @@ namespace PowerShellTerminal.Application.Services
             {
                 _currentTheme = new TerminalTheme
                 {
-                    BackgroundColor = Color.FromName(settings.BackgroundColor),
-                    ForegroundColor = Color.FromName(settings.ForegroundColor),
+                    BackgroundColor = ParseColorString(settings.BackgroundColor, Color.Black),
+                    ForegroundColor = ParseColorString(settings.ForegroundColor, Color.Lime),
                     ErrorColor = Color.Red,
                     DefaultFont = new Font(settings.FontFamily, settings.FontSize)
                 };
             }
 
             Notify();
+        }
+
+        private Color ParseColorString(string colorString, Color defaultColor)
+        {
+            if (string.IsNullOrWhiteSpace(colorString))
+                return defaultColor;
+
+            // Support hex like #RRGGBB
+            if (colorString.StartsWith("#"))
+            {
+                try
+                {
+                    var r = Convert.ToInt32(colorString.Substring(1, 2), 16);
+                    var g = Convert.ToInt32(colorString.Substring(3, 2), 16);
+                    var b = Convert.ToInt32(colorString.Substring(5, 2), 16);
+                    return Color.FromArgb(r, g, b);
+                }
+                catch
+                {
+                    return defaultColor;
+                }
+            }
+
+            // Try named color
+            try
+            {
+                var named = Color.FromName(colorString);
+                if (!named.IsEmpty)
+                    return named;
+            }
+            catch { }
+
+            return defaultColor;
         }
 
         public void ApplyTheme(TerminalTheme theme)

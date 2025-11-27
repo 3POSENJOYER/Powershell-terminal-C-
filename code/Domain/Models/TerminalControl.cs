@@ -121,7 +121,7 @@ namespace PowerShellTerminal.Domain.Models
                 bool success = !string.IsNullOrEmpty(output) && 
                               !output.Contains("Error:") && 
                               !output.Contains("Exception:");
-
+                                                                            
                 await _historyService.SaveCommandAsync(
                     command,
                     output ?? "",
