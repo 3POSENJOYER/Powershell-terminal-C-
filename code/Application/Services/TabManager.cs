@@ -44,6 +44,8 @@ namespace PowerShellTerminal.Application.Services
                 var tabToRemove = _tabs.FirstOrDefault(t => t.TabPage == currentTab);
                 if (tabToRemove != null)
                 {
+                    // Detach from theme manager to avoid memory leaks / stale references
+                    _themeManager?.Detach(tabToRemove);
                     _tabs.Remove(tabToRemove);
                 }
             }

@@ -58,7 +58,6 @@ namespace PowerShellTerminal.Infrastructure.Repositories
             var settings = await _context.UserSettings.FirstOrDefaultAsync();
             if (settings == null)
             {
-                // Створюємо налаштування за замовчуванням
                 settings = new UserSettings();
                 await _context.UserSettings.AddAsync(settings);
                 await _context.SaveChangesAsync();
@@ -71,7 +70,6 @@ namespace PowerShellTerminal.Infrastructure.Repositories
             var existing = await _context.UserSettings.FirstOrDefaultAsync();
             if (existing != null)
             {
-                // Оновлюємо існуючі налаштування
                 existing.ThemeName = settings.ThemeName;
                 existing.FontFamily = settings.FontFamily;
                 existing.FontSize = settings.FontSize;
@@ -85,7 +83,6 @@ namespace PowerShellTerminal.Infrastructure.Repositories
             }
             else
             {
-                // Додаємо нові налаштування
                 settings.LastModified = DateTime.Now;
                 await _context.UserSettings.AddAsync(settings);
             }

@@ -4,13 +4,9 @@ using System.Threading.Tasks;
 
 namespace PowerShellTerminal.Domain.Models
 {
-    /// <summary>
-    /// Utility class for executing commands in different shells.
-    /// Replaces the Strategy pattern with simple static methods.
-    /// </summary>
+
     public static class CommandExecutor
     {
-        /// <summary>Execute a PowerShell command.</summary>
         public static async Task<CommandResult> ExecutePowerShellAsync(string command)
         {
             var result = new CommandResult();
@@ -39,8 +35,6 @@ namespace PowerShellTerminal.Domain.Models
             }
             return result;
         }
-
-        /// <summary>Execute a cmd command.</summary>
         public static async Task<CommandResult> ExecuteCmdAsync(string command)
         {
             var result = new CommandResult();
@@ -70,7 +64,6 @@ namespace PowerShellTerminal.Domain.Models
             return result;
         }
 
-        /// <summary>Execute a bash command.</summary>
         public static async Task<CommandResult> ExecuteBashAsync(string command)
         {
             var result = new CommandResult();

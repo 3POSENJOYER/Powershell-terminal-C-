@@ -5,7 +5,6 @@ namespace PowerShellTerminal.Domain.Models
 {
     public class CommandInterpreter
     {
-        // Execute a PowerShell command directly.
         public async Task<string> ExecuteCommand(string command)
         {
             var result = await CommandExecutor.ExecutePowerShellAsync(command);

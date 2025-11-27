@@ -5,13 +5,11 @@ namespace PowerShellTerminal.Infrastructure.Data
 {
     public class TerminalDbContext : DbContext
     {
-        // constructor for DI (EF needs this)
         public TerminalDbContext(DbContextOptions<TerminalDbContext> options)
             : base(options)
         {
         }
 
-        // constructor for manual creation in repositories (your case)
         public TerminalDbContext() 
             : base(new DbContextOptionsBuilder<TerminalDbContext>()
                 .UseSqlite("Data Source=terminal.db")
