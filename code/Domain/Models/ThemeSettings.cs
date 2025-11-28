@@ -1,8 +1,6 @@
-using PowerShellTerminal.Domain.Prototype;
-
 namespace PowerShellTerminal.Domain.Models
 {
-    public class ThemeSettings : IPrototype
+    public class ThemeSettings
     {
         public string BackgroundColor { get; set; }
         public string TextColor { get; set; }
@@ -16,11 +14,6 @@ namespace PowerShellTerminal.Domain.Models
                 TextColor = TextColor,
                 FontSize = FontSize
             };
-        }
-
-        public IPrototype Clone()
-        {
-            return CloneSettings();
         }
     }
 }

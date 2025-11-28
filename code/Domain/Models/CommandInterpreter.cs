@@ -35,7 +35,6 @@ namespace PowerShellTerminal.Domain.Models
             expression.Interpret(context);
         }
 
-        // Return the task directly to keep method simple and fast.
         public Task<CommandResult> ExecuteCommand(string command)
         {
             return _strategy.ExecuteAsync(command);

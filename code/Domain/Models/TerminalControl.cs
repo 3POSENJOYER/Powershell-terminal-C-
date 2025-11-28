@@ -94,7 +94,7 @@ namespace PowerShellTerminal.Domain.Models
 
         private async Task ExecuteCommandAsync(string command)
         {
-            WriteOutput($"PS> {command}", Color.Yellow);
+                WriteLine($"PS> {command}", Color.Yellow);
 
             try
             {
@@ -102,17 +102,17 @@ namespace PowerShellTerminal.Domain.Models
 
                 if (!string.IsNullOrWhiteSpace(result?.Output))
                 {
-                    WriteOutput(result.Output, Color.Lime);
+                    WriteLine(result.Output, Color.Lime);
                 }
 
                 await SaveCommandToHistory(command, result?.Output);
             }
             catch (Exception ex)
             {
-                WriteOutput($"Error: {ex.Message}", Color.Red);
+                WriteLine($"Error: {ex.Message}", Color.Red);
             }
 
-            WriteOutput("", Color.Lime);
+            WriteLine("", Color.Lime);
         }
 
         private async Task SaveCommandToHistory(string command, string output)
@@ -130,15 +130,15 @@ namespace PowerShellTerminal.Domain.Models
             catch (Exception ex)
             {
                 Console.WriteLine($" Failed to save command: {ex.Message}");
-                WriteOutput($"History error: {ex.Message}", Color.Red);
+                WriteLine($"History error: {ex.Message}", Color.Red);
             }
         }
 
-        private void WriteOutput(string text, Color color)
+        public void WriteLine(string text, Color color)
         {
             if (this.InvokeRequired)
             {
-                this.Invoke(new Action(() => WriteOutput(text, color)));
+                this.Invoke(new Action(() => WriteLine(text, color)));
                 return;
             }
 
@@ -149,11 +149,21 @@ namespace PowerShellTerminal.Domain.Models
             _outputBox.ScrollToCaret();
         }
 
+        public void ClearOutput()
+        {
+            if (this.InvokeRequired)
+            {
+                this.Invoke(new Action(() => ClearOutput()));
+                return;
+            }
+            _outputBox.Clear();
+        }
+
         private void ShowWelcomeMessage()
         {
-            WriteOutput("PowerShell Terminal - Ready", Color.Cyan);
-            WriteOutput("Type your PowerShell commands below:", Color.Gray);
-            WriteOutput(string.Empty, Color.Lime);
+            WriteLine("PowerShell Terminal - Ready", Color.Cyan);
+            WriteLine("Type your PowerShell commands below:", Color.Gray);
+            WriteLine(string.Empty, Color.Lime);
         }
 
         public void FocusInput()

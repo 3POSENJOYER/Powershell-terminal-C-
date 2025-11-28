@@ -4,18 +4,24 @@ using System.Linq;
 using System.Windows.Forms;
 using PowerShellTerminal.Domain.Entities;
 using PowerShellTerminal.Infrastructure.Repositories;
+using PowerShellTerminal.Application.Patterns.Command;
+using PowerShellTerminal.Application.Services;
 
 namespace PowerShellTerminal
 {
     public partial class MainForm : Form
     {
         private readonly CommandHistoryRepository _repository;
+        private readonly CommandInvoker _invoker;
+        private readonly HistoryService _historyService;
         private const string PROMPT = "PS> ";
 
         public MainForm()
         {
             InitializeComponent();
             _repository = new CommandHistoryRepository();
+            _invoker = new CommandInvoker();
+            _historyService = new HistoryService();
             SetupTerminal();
         }
 
@@ -68,13 +74,8 @@ namespace PowerShellTerminal
 
                 terminalBox.AppendText(result);
 
-                // Save to history.
-                await _repository.AddAsync(new CommandHistory
-                {
-                    Command = command,
-                    Output = result,
-                    ExecutedAt = DateTime.Now
-                });
+                var saveCmd = new SaveHistoryCommand(_historyService, command, result, string.Empty, true, Environment.CurrentDirectory, 0);
+                await _invoker.InvokeAsync(saveCmd);
             }
             catch (Exception ex)
             {

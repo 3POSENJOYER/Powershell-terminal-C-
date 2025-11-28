@@ -1,34 +1,37 @@
 using PowerShellTerminal.Application.Services;
-using PowerShellTerminal.Domain.Prototype;
-using PowerShellTerminal.Domain.Observer;
 using System.Windows.Forms;
+using PowerShellTerminal.Domain.Patterns.Bridge;
 
 namespace PowerShellTerminal.Domain.Models
 {
-    public class TerminalTab : IPrototype, IObserver
+    public class TerminalTab
     {
         public string Title { get; set; }
         public TerminalTheme Theme { get; set; }
         public PowerShellSession Session { get; set; }
         public TerminalControl TerminalControl { get; set; }
+        public PowerShellTerminal.Domain.Patterns.Bridge.TerminalAbstraction TerminalRenderer { get; set; }
         public CommandInterpreter Interpreter { get; set; }
         public TabPage TabPage { get; set; }
         private ThemeManager _themeManager;
 
-        public TerminalTab(ThemeManager themeManager, HistoryService historyService)
+        public TerminalTab(TerminalControl terminalControl, ThemeManager themeManager, HistoryService historyService)
         {
             Title = "PowerShell";
             Theme = new TerminalTheme();
             Session = new PowerShellSession();
-            Interpreter = new CommandInterpreter();
-            TerminalControl = new TerminalControl(Interpreter, historyService);
+            Interpreter = null; 
+            TerminalControl = terminalControl;
             TabPage = new TabPage(Title);
             _themeManager = themeManager;
-            
+
             TerminalControl.AsControl().Dock = DockStyle.Fill;
             TabPage.Controls.Add(TerminalControl.AsControl());
-            
+
             TabPage.Enter += (s, e) => TerminalControl.FocusInput();
+
+            var guiRenderer = new GuiRenderer(TerminalControl);
+            TerminalRenderer = new TerminalAbstraction(guiRenderer);
         }
 
         public void ApplyTheme(TerminalTheme theme)
@@ -44,34 +47,21 @@ namespace PowerShellTerminal.Domain.Models
             TerminalControl.FocusInput();
         }
 
-        public void Notify()
-        {
-            ApplyTheme(_themeManager.GetCurrentTheme());
-        }
-
-        public void Attach(IObserver observer)
-        {
-        }
-
-        public void Detach(IObserver observer)
-        {
-        }
-
-        // Typed clone helper returning the concrete type for easier use.
         public TerminalTab CloneTab()
         {
-            var cloned = new TerminalTab(new ThemeManager(), new HistoryService())
+            var newInterpreter = new CommandInterpreter();
+            var newHistory = new HistoryService();
+            var newControl = _themeManager.CreateTerminalControl(newInterpreter, newHistory);
+
+            var cloned = new TerminalTab(newControl, _themeManager, newHistory)
             {
                 Title = this.Title,
-                Theme = this.Theme?.CloneTheme(),
-                Session = this.Session?.CloneSession()
+                Theme = this.Theme?.Clone(),
+                Session = new PowerShellSession()
             };
+            var gui = new GuiRenderer(cloned.TerminalControl);
+            cloned.TerminalRenderer = new TerminalAbstraction(gui);
             return cloned;
-        }
-
-        public IPrototype Clone()
-        {
-            return CloneTab();
         }
     }
 }

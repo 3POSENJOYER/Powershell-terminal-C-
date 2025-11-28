@@ -5,7 +5,6 @@ namespace PowerShellTerminal.Infrastructure
 {
     public static class DatabaseInitializer
     {
-        // Initialize the database and ensure it's created.
         public static void Initialize()
         {
             try

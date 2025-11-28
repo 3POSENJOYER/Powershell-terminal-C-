@@ -21,22 +21,21 @@ namespace PowerShellTerminal.Application.Services
             _historyService = historyService;
         }
 
-        // Create a new terminal tab and add it to the tab control.
         public void CreateNewTab()
         {
-            var terminalTab = new TerminalTab(_themeManager, _historyService)
+            var control = _themeManager.CreateTerminalControl(new CommandInterpreter(), _historyService);
+            var terminalTab = new TerminalTab(control, _themeManager, _historyService)
             {
                 Title = $"PowerShell {_tabs.Count + 1}"
             };
             terminalTab.TabPage.Text = terminalTab.Title;
-            
+
             _tabControl.TabPages.Add(terminalTab.TabPage);
             _tabs.Add(terminalTab);
             _tabControl.SelectedTab = terminalTab.TabPage;
             terminalTab.ApplyTheme(_themeManager.GetCurrentTheme());
         }
 
-        // Close the current tab (prevents closing the last tab).
         public void CloseCurrentTab()
         {
             if (_tabControl.TabPages.Count <= 1)
@@ -55,7 +54,6 @@ namespace PowerShellTerminal.Application.Services
             }
         }
 
-        // Get the currently active terminal tab.
         public TerminalTab GetCurrentTab()
         {
             return _tabs.FirstOrDefault(t => t.TabPage == _tabControl.SelectedTab);
