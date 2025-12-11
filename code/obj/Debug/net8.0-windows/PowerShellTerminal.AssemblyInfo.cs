@@ -13,7 +13,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("PowerShellTerminal")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+691babd06f9f0c5117c128cbc82ae960bf91ddbf")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+0caa7f76381d56d6097d1a6b2c8f0b9eea3c7dff")]
 [assembly: System.Reflection.AssemblyProductAttribute("PowerShellTerminal")]
 [assembly: System.Reflection.AssemblyTitleAttribute("PowerShellTerminal")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]

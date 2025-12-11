@@ -8,7 +8,7 @@ namespace PowerShellTerminal.Domain.Models
         public TerminalControl TerminalControl { get; set; }
         public CommandInterpreter Interpreter { get; set; }
         public TabPage TabPage { get; set; }
-
+    
         private readonly ThemeManager _themeManager;
 
         public TerminalTab(ThemeManager themeManager, HistoryService historyService, int sessionId)

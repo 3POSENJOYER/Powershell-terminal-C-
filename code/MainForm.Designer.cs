@@ -50,6 +50,10 @@ namespace PowerShellTerminal
             this.fileToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.newTerminalToolStripMenuItem});
             // 
+            // terminalToolClose
+            // 
+  
+            // 
             // themeToolStripMenuItem
             // 
             this.themeToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {

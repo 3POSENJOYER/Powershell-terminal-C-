@@ -44,7 +44,6 @@ namespace PowerShellTerminal.Application.Services
             if (string.IsNullOrWhiteSpace(colorString))
                 return defaultColor;
 
-            // Support hex like #RRGGBB
             if (colorString.StartsWith("#"))
             {
                 try
@@ -60,7 +59,6 @@ namespace PowerShellTerminal.Application.Services
                 }
             }
 
-            // Try named color
             try
             {
                 var named = Color.FromName(colorString);

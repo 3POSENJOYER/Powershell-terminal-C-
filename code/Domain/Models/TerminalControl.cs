@@ -1,5 +1,7 @@
 using PowerShellTerminal.Application.Services;
+using System;
 using System.Drawing;
+using System.Threading.Tasks;
 using System.Windows.Forms;
 
 namespace PowerShellTerminal.Domain.Models
@@ -10,6 +12,7 @@ namespace PowerShellTerminal.Domain.Models
         private TextBox _inputBox;
         private Label _promptLabel;
         private Panel _inputPanel;
+        private Button _closeButton;
         private CommandInterpreter _interpreter;
         private HistoryService _historyService;
         private int _sessionId;
@@ -37,7 +40,6 @@ namespace PowerShellTerminal.Domain.Models
             _outputBox.BorderStyle = BorderStyle.None;
             _outputBox.ScrollBars = RichTextBoxScrollBars.Vertical;
 
-  
             _inputPanel = new Panel();
             _inputPanel.Dock = DockStyle.Bottom;
             _inputPanel.Height = 30;
@@ -53,22 +55,46 @@ namespace PowerShellTerminal.Domain.Models
             _promptLabel.Width = 40;
             _promptLabel.TextAlign = ContentAlignment.MiddleLeft;
 
- 
             _inputBox = new TextBox();
             _inputBox.Dock = DockStyle.Fill;
             _inputBox.BackColor = Color.Black;
             _inputBox.ForeColor = Color.White;
             _inputBox.Font = new Font("Consolas", 10);
             _inputBox.BorderStyle = BorderStyle.FixedSingle;
-
             _inputBox.KeyDown += InputBox_KeyDown;
 
+            _closeButton = new Button();
+            _closeButton.Text = "X";
+            _closeButton.Dock = DockStyle.Right;
+            _closeButton.Width = 30;
+            _closeButton.BackColor = Color.FromArgb(70, 70, 70);
+            _closeButton.ForeColor = Color.White;
+            _closeButton.FlatStyle = FlatStyle.Flat;
+            _closeButton.FlatAppearance.BorderSize = 0;
+            _closeButton.Click += CloseButton_Click;
+
+            _inputPanel.Controls.Add(_closeButton);
             _inputPanel.Controls.Add(_inputBox);
             _inputPanel.Controls.Add(_promptLabel);
 
-   
             this.Controls.Add(_outputBox);
             this.Controls.Add(_inputPanel);
+        }
+
+        private void CloseButton_Click(object sender, EventArgs e)
+        {
+            if (this.Parent is TabPage tabPage)
+            {
+                if (tabPage.Parent is TabControl tabControl)
+                {
+                    tabControl.TabPages.Remove(tabPage);
+                }
+            }
+            else if (this.Parent != null)
+            {
+                this.Parent.Controls.Remove(this);
+            }
+            this.Dispose();
         }
 
         private void InputBox_KeyDown(object sender, KeyEventArgs e)
@@ -89,21 +115,17 @@ namespace PowerShellTerminal.Domain.Models
 
         private async Task ExecuteCommandAsync(string command)
         {
-   
             WriteOutput($"PS> {command}", Color.Yellow);
 
             try
             {
- 
                 string result = await _interpreter.ExecuteCommand(command);
                 
-  
                 if (!string.IsNullOrWhiteSpace(result))
                 {
                     WriteOutput(result, Color.Lime);
                 }
 
-     
                 await SaveCommandToHistory(command, result);
             }
             catch (Exception ex)
@@ -111,7 +133,7 @@ namespace PowerShellTerminal.Domain.Models
                 WriteOutput($"Error: {ex.Message}", Color.Red);
             }
 
-            WriteOutput("", Color.Lime); 
+            WriteOutput("", Color.Lime);
         }
 
         private async Task SaveCommandToHistory(string command, string output)
@@ -127,7 +149,7 @@ namespace PowerShellTerminal.Domain.Models
                     output ?? "",
                     "",
                     success,
-                    Directory.GetCurrentDirectory(),
+                    System.IO.Directory.GetCurrentDirectory(),
                     _sessionId
                 );
 
@@ -186,7 +208,6 @@ namespace PowerShellTerminal.Domain.Models
         {
             if (font == null)
             {
-
                 return;
             }
 

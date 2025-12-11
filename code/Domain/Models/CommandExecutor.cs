@@ -13,7 +13,7 @@ namespace PowerShellTerminal.Domain.Models
             try
             {
                 var psi = new ProcessStartInfo
-                {
+                { 
                     FileName = "powershell.exe",
                     Arguments = $"-NoProfile -ExecutionPolicy Bypass -Command \"{command}\"",
                     RedirectStandardOutput = true,
