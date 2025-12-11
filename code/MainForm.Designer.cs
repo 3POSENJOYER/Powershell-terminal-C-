@@ -77,9 +77,7 @@ namespace PowerShellTerminal
             this.darkThemeToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
             this.darkThemeToolStripMenuItem.Text = "Dark";
             this.darkThemeToolStripMenuItem.Click += new System.EventHandler(this.darkThemeToolStripMenuItem_Click);
-            // 
-            // customThemeToolStripMenuItem
-            // 
+
             this.customThemeToolStripMenuItem.Name = "customThemeToolStripMenuItem";
             this.customThemeToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
             this.customThemeToolStripMenuItem.Text = "Custom...";
